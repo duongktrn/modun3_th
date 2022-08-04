@@ -41,6 +41,12 @@ public class ServletProduct extends HttpServlet {
             case "creat":
                 creatProduct(request,response);
                 break;
+            case "search":
+                searchProduct(request,response);
+                break;
+            case "edit":
+                updateProduct(request,response);
+                break;
         }
     }
     public void getCategory(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
@@ -71,8 +77,27 @@ public class ServletProduct extends HttpServlet {
     }
     public void editProduct(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        request.setAttribute("products",productService.findById(id));
-        request.setAttribute("categories",categoryService.findById(id));
+        request.setAttribute("p",productService.findById(id));
+        request.setAttribute("categories",categoryService.findAll());
         request.getRequestDispatcher("edit.jsp").forward(request,response);
+    }
+    public void updateProduct(HttpServletRequest request,HttpServletResponse response) throws IOException {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            double price = Double.parseDouble(request.getParameter("price"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            String color = request.getParameter("color");
+            String description = request.getParameter("description");
+            int id_category = Integer.parseInt(request.getParameter("category"));
+            Product product = new Product(id,name,price,quantity,color,description,categoryService.findById(id_category));
+            productService.updateProduct(product,id);
+            response.sendRedirect("/product?action=display");
+    }
+    public void searchProduct(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        String search = "%" + request.getParameter("search")+"%";
+        ArrayList<Product> products = productService.searchProduct(search);
+        request.setAttribute("products",products);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("display.jsp");
+        requestDispatcher.forward(request,response);
     }
 }

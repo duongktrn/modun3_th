@@ -20,4 +20,12 @@ public class ProductService {
     public Product findById(int id){
         return productRepo.findById(id);
     }
+
+    public ArrayList<Product> searchProduct(String search) {
+       return productRepo.searchProduct(search);
+    }
+
+    public void updateProduct(Product product,int id) {
+        productRepo.updateProduct(product,id);
+    }
 }

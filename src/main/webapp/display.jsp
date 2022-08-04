@@ -13,6 +13,10 @@
 </head>
 <body>
 <button><a href="product?action=creat">Creat Product</a></button>
+<form action="product?action=search" method="post">
+    <input type="text" name="search">
+    <button type="submit">Search</button>
+</form>
 <table border="1 solid">
     <tr>
         <td>#</td>

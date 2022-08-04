@@ -15,8 +15,9 @@ public class ProductRepo {
     private final String SELECT_ALL_PRODUCT = "SELECT * FROM PRODUCT";
     private final String INSERT_PRODUCT = "insert into product(name,price,quantity,color,description,id_category) VALUE(?,?,?,?,?,?)";
     private final String SELECT_PRODUCT_BY_ID = "SELECT * FROM PRODUCT WHERE ID=?";
-    private final String UPDATE_PRODUCT = "UPDATE PRODUCT SET NAME=?,PRICE=?,QUANTITY=?,DESCRIPTION=?,CATEGORY_ID=? WHERE ID=?";
+    private final String UPDATE_PRODUCT = "UPDATE PRODUCT SET NAME=?,PRICE=?,QUANTITY=?,color=?,DESCRIPTION=?,id_category=? WHERE ID=?";
     private final String DELETE_PRODUCT_BY_ID = "DELETE FROM PRODUCT WHERE ID=?";
+    private final String SEARCH_PRODUCT = "select * from product where name like ?";
     public void creatProduct(Product product,int id_category){
         try {
             Connection connection = myconnection.getConnection();
@@ -87,5 +88,46 @@ public class ProductRepo {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public ArrayList<Product> searchProduct(String search) {
+        ArrayList<Product> products = new ArrayList<>();
+        try {
+            Connection connection = myconnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_PRODUCT);
+            preparedStatement.setString(1,search);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double price = resultSet.getDouble("price");
+                int quantity = resultSet.getInt("quantity");
+                String description = resultSet.getString("description");
+                String color = resultSet.getString("color");
+                int id_category = resultSet.getInt("id_category");
+                Product product = new Product(id,name,price,quantity,color,description,categoryRepo.findById(id_category));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
+
+    public void updateProduct(Product product,int id) {
+        try {
+            Connection connection = myconnection.getConnection();
+            PreparedStatement preparedStatement  = connection.prepareStatement(UPDATE_PRODUCT);
+            preparedStatement.setString(1,product.getName());
+            preparedStatement.setDouble(2,product.getPrice());
+            preparedStatement.setInt(3,product.getQuantity());
+            preparedStatement.setString(4,product.getColor());
+            preparedStatement.setString(5,product.getDescription());
+            preparedStatement.setInt(6,product.getCategory().getId());
+            preparedStatement.setInt(7,id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

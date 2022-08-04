@@ -37,9 +37,8 @@ public class CategoryRepo {
             preparedStatement.setInt(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                int id_category = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                return new Category(id_category,name);
+                return new Category(id,name);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());;

@@ -46,7 +46,7 @@
     </tr>
   </table>
   <button type="submit">Tạo Mới</button>
-  <button><a href="display.jsp">Back</a></button>
+  <button><a href="/product?action=display">Back</a></button>
 </form>
 </body>
 </html>

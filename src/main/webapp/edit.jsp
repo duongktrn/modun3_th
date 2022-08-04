@@ -15,6 +15,10 @@
 <form action="/product?action=edit" method="post">
     <table>
         <tr>
+            <td><label for="id">ID</label></td>
+            <td><input type="text" name="id" id="id" value="${p.getId()}" size="20" readonly></td>
+        </tr>
+        <tr>
             <td><label for="name">Name</label></td>
             <td><input type="text" name="name" id="name" value="${p.getName()}"></td>
         </tr>
